@@ -19,15 +19,19 @@ as.Date(data$DATE, format = "%m-%d-%y")
 
 inflow <- data %>% 
   filter(SENSOR_TYPE == "INFLOW")
+as.Date(inflow$DATE, format = "%m-%d-%y")
 
 outflow <- data %>% 
   filter(SENSOR_TYPE == "OUTFLOW")
+as.Date(outflow$DATE, format = "%m-%d-%y")
 
 release<- data %>% 
   filter(SENSOR_TYPE == "REL SCH")
+as.Date(release$DATE, format = "%m-%d-%y")
 
 storage<- data %>% 
   filter(SENSOR_TYPE == "STORAGE")
+as.Date(storage$DATE, format = "%m-%d-%y")
 
 
 
@@ -40,9 +44,11 @@ test run?
 
 
 plot <- ggplot(data = inflow)+
-  geom_line(aes(x = DATE, y = VALUE))+
+  geom_point(aes(x = DATE, y = VALUE, 
+                 alpha = 0.5))+
+  geom_smooth(aes(x = DATE, y = VALUE, color = "#00AFBB"))+
   theme_minimal()+
-  scale_x_date(limits = c(min, max), breaks = c())+
+  scale_y_continuous(limits = c(0,50000))
 
 plot
 
