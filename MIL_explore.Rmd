@@ -12,14 +12,16 @@ read data, change date column data type
 
 library(tidyverse)
 
-data <- read_csv("MIL_50years_R.csv") 
+data <- read_csv("MIL_50years_R.csv")
 
-as.Date(data$DATE, format = "%m-%d-%y")
+colnames(data) <- c("id", "duration", "sensor_number", "sensor_type", "year", "month", "day", "date", "obs_date", "value", "flag", "units")
+
+as.Date(data$date, format = "%m-%d-%y")
 
 
 inflow <- data %>% 
-  filter(SENSOR_TYPE == "INFLOW")
-as.Date(inflow$DATE, format = "%m-%d-%y")
+  filter(sensor_type == "INFLOW")
+as.Date(inflow$date, format = "%m-%d-%y")
 
 outflow <- data %>% 
   filter(SENSOR_TYPE == "OUTFLOW")
@@ -42,11 +44,9 @@ as.Date(storage$DATE, format = "%m-%d-%y")
 test run?
 ```{r}
 
-
-plot <- ggplot(data = inflow)+
-  geom_point(aes(x = DATE, y = VALUE, 
-                 alpha = 0.5))+
-  geom_smooth(aes(x = DATE, y = VALUE, color = "#00AFBB"))+
+plot <- ggplot(data = inflow, aes(x = obs_date, y = value))+
+  geom_line()+
+  geom_smooth()+
   theme_minimal()+
   scale_y_continuous(limits = c(0,50000))
 
