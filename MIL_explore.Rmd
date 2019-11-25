@@ -1,0 +1,56 @@
+---
+title: "MIL_explore"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+read data, change date column data type
+```{r}
+
+library(tidyverse)
+
+data <- read_csv("MIL_50years_R.csv") 
+
+as.Date(data$DATE, format = "%m-%d-%y")
+
+
+inflow <- data %>% 
+  filter(SENSOR_TYPE == "INFLOW")
+
+outflow <- data %>% 
+  filter(SENSOR_TYPE == "OUTFLOW")
+
+release<- data %>% 
+  filter(SENSOR_TYPE == "REL SCH")
+
+storage<- data %>% 
+  filter(SENSOR_TYPE == "STORAGE")
+
+
+
+```
+
+
+
+test run?
+```{r}
+
+
+plot <- ggplot(data = data, x = DATE, y = VALUE)+
+  geom_point(aes(x = DATE, y = VALUE, fill = SENSOR_TYPE))+
+  theme_minimal()
+
+plot
+
+
+```
+
+
+
+
+
+
+
