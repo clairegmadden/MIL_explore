@@ -39,9 +39,10 @@ test run?
 ```{r}
 
 
-plot <- ggplot(data = data, x = DATE, y = VALUE)+
-  geom_point(aes(x = DATE, y = VALUE, fill = SENSOR_TYPE))+
-  theme_minimal()
+plot <- ggplot(data = inflow)+
+  geom_line(aes(x = DATE, y = VALUE))+
+  theme_minimal()+
+  scale_x_date(limits = c(min, max), breaks = c())+
 
 plot
 
