@@ -7,7 +7,7 @@ output: word_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-read data, change date column data type
+read 50 year data, change date column data type <- not working
 ```{r}
 
 library(tidyverse)
@@ -16,24 +16,29 @@ data <- read_csv("MIL_50years_R.csv")
 
 colnames(data) <- c("id", "duration", "sensor_number", "sensor_type", "year", "month", "day", "date", "obs_date", "value", "flag", "units")
 
-as.Date(data$date, format = "%m-%d-%y")
+as.Date(data$obs_date, format = "%Y-%m-%d")
 
 
 inflow <- data %>% 
   filter(sensor_type == "INFLOW")
-as.Date(inflow$date, format = "%m-%d-%y")
 
 outflow <- data %>% 
-  filter(SENSOR_TYPE == "OUTFLOW")
-as.Date(outflow$DATE, format = "%m-%d-%y")
+  filter(sensor_type == "OUTFLOW")
+
 
 release<- data %>% 
-  filter(SENSOR_TYPE == "REL SCH")
-as.Date(release$DATE, format = "%m-%d-%y")
+  filter(sensor_type == "REL SCH")
+
 
 storage<- data %>% 
-  filter(SENSOR_TYPE == "STORAGE")
-as.Date(storage$DATE, format = "%m-%d-%y")
+  filter(sensor_type == "STORAGE") %>% 
+  select("id", "obs_date", "value", "units") %>% 
+  na.omit(value) %>% 
+  mutate(percentage = (value/520528)*100)
+
+
+storage$percentage<-round(storage$percentage, 2)
+
 
 
 
@@ -54,6 +59,115 @@ plot
 
 
 ```
+
+
+
+
+```{r}
+
+
+plot_storage <- ggplot(data = storage, aes(x = obs_date, y = value))+
+  geom_line()+
+  geom_smooth()+
+  theme_minimal()+
+  scale_y_continuous(limits = c(0,600000))
+
+plot_storage
+
+
+plot_percent <- ggplot(data = storage, aes(x = obs_date, y = percentage))+
+  geom_area()+
+  theme_minimal()+
+  scale_y_continuous(limits = c(0,120))
+
+plot_percent
+
+
+```
+
+
+
+```{r}
+
+plot_outflow <- ggplot(data = outflow, aes(x = obs_date, y = value))+
+  geom_line()+
+  geom_smooth()+
+  theme_minimal()+
+  scale_y_continuous(limits = c(0,35000))
+
+
+plot_outflow
+
+
+```
+
+
+
+```{r}
+
+
+plot_release <- ggplot(data = release, aes(x = obs_date, y = value))+
+  geom_point()+
+  theme_minimal()+
+  scale_y_continuous(limits = c(0,35000))
+
+
+plot_release
+
+
+
+
+
+```
+
+
+try with last 10 years of data for simpler visualization
+```{r}
+
+storage10 <- subset(storage, obs_date > as.Date ("2009-1-1"))
+outflow10 <- subset(outflow, obs_date > as.Date ("2009-1-1"))
+
+
+
+plot_storage10 <- ggplot(data = storage10, aes(x = obs_date, y = value))+
+  geom_line()+
+  geom_smooth()+
+  theme_minimal()+
+  scale_y_continuous(limits = c(0,600000))
+
+plot_storage10
+
+
+plot_percent10 <- ggplot()+
+  geom_area(data = storage10, aes(x = obs_date, y = value))+
+  geom_line(data = outflow10, aes(x = obs_date, y = value))+
+  theme_minimal()+
+  scale_y_continuous(
+  sec.axis = sec_axis(~., name = "outflows and releases (cfs)"),limits = c(0,20000))
+
+plot_percent10
+
+
+
+
+```
+
+
+
+
+```{r}
+storage2000 <- subset(storage, obs_date > as.Date ("2000-1-1"))
+outflow2000 <- subset(outflow, obs_date > as.Date ("2000-1-1"))
+
+
+
+
+
+
+```
+
+
+
 
 
 
