@@ -16,12 +16,15 @@ data <- read_csv("MIL_50years_R.csv")
 
 colnames(data) <- c("id", "duration", "sensor_number", "sensor_type", "year", "month", "day", "date", "obs_date", "value", "flag", "units")
 
+
 as.Date(data$date, format = "%m-%d-%y")
 
 
 inflow <- data %>% 
   filter(sensor_type == "INFLOW")
-as.Date(inflow$date, format = "%m-%d-%y")
+as.Date.factor(inflow$date, format = "%m-%d-%y")
+
+
 
 outflow <- data %>% 
   filter(SENSOR_TYPE == "OUTFLOW")
