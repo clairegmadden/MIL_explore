@@ -1,0 +1,42 @@
+---
+title: "trial"
+author: "Claire Madden"
+date: "12/1/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r}
+library(tidyverse)
+
+data<- read_csv("MIL_7.csv")
+
+colnames(data) <- c("id", "duration", "sensor_number", "sensor_type", "date", "value", "flag", "units", "obs_date")
+
+```
+
+```{r}
+
+plot_release <- ggplot(data = data, aes(x = date, y = value))+
+  geom_area()+
+  theme_minimal()+
+  scale_y_continuous(limits = c(0,10000))+
+  scale_x_datetime(date_breaks = "5 year")
+
+
+plot_release
+
+
+
+
+```
+
+
+
+
+
